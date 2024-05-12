@@ -9,8 +9,6 @@ const db = require("./config/mongoose");
 // Middleware
 app.use(bodyParser.json());
 
-// app.use(express.urlencoded({ extended: true }));
-
 app.use("/", require("./Routes"));
 
 // Error handling middleware

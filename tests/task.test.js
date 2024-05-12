@@ -9,7 +9,7 @@ describe("Task Management API", () => {
     await Task.deleteMany({});
   });
 
-  describe("POST /task", () => {
+  describe("POST /create-task", () => {
     test("creates a new task", async () => {
       const newTask = {
         title: "Test Task",
@@ -17,7 +17,10 @@ describe("Task Management API", () => {
         status: "pending",
       };
 
-      const res = await request(app).post("/task").send(newTask).expect(201);
+      const res = await request(app)
+        .post("/create-task")
+        .send(newTask)
+        .expect(201);
 
       expect(res.body.title).toBe(newTask.title);
       expect(res.body.description).toBe(newTask.description);
@@ -33,14 +36,14 @@ describe("Task Management API", () => {
         status: "pending",
       };
 
-      await request(app).post("/task").send(invalidTask).expect(400);
+      await request(app).post("/create-task").send(invalidTask).expect(400);
 
       const tasks = await Task.find();
       expect(tasks.length).toBe(0);
     });
   });
 
-  describe("GET /task", () => {
+  describe("GET /retrieveall-task", () => {
     test("retrieves all tasks", async () => {
       // Create sample tasks
       await Task.create([
@@ -57,14 +60,14 @@ describe("Task Management API", () => {
       ]);
 
       // Make GET request to retrieve all tasks
-      const res = await request(app).get("/task").expect(200);
+      const res = await request(app).get("/retrieveall-task").expect(200);
 
       // Assertions
       expect(res.body.length).toBe(2);
     });
   });
 
-  describe("GET /task/:id", () => {
+  describe("GET /getSingle-task/:id", () => {
     test("retrieves a single task by its ID", async () => {
       // Create a sample task in the database
       const newTask = await Task.create({
@@ -75,7 +78,9 @@ describe("Task Management API", () => {
       });
 
       // Make GET request to retrieve the task by its ID
-      const res = await request(app).get(`/tasks/${newTask._id}`).expect(200);
+      const res = await request(app)
+        .get(`/getSingle-task/${newTask._id}`)
+        .expect(200);
 
       // Assertions
       expect(res.body.title).toBe(newTask.title);
@@ -85,11 +90,11 @@ describe("Task Management API", () => {
 
     test("returns 404 if task with given ID does not exist", async () => {
       // Make GET request with an invalid task ID
-      await request(app).get("/tasks/invalid-id").expect(404);
+      await request(app).get("/getSingle-task/invalid-id").expect(400);
     });
   });
 
-  describe("PUT /task/:id", () => {
+  describe("PUT /update-task/:id", () => {
     test("updates a task by its ID", async () => {
       // Create a sample task in the database
       const newTask = await Task.create({
@@ -107,7 +112,7 @@ describe("Task Management API", () => {
 
       // Make PUT request to update the task by its ID
       const res = await request(app)
-        .put(`/tasks/${newTask._id}`)
+        .put(`/update-task/${newTask._id}`)
         .send(updatedTaskData)
         .expect(200);
 
@@ -125,11 +130,11 @@ describe("Task Management API", () => {
 
     test("returns 404 if task with given ID does not exist", async () => {
       // Make PUT request with an invalid task ID
-      await request(app).put("/task/invalid-id").expect(404);
+      await request(app).put("/update-task/invalid-id").expect(404);
     });
   });
 
-  describe("DELETE /task/:id", () => {
+  describe("DELETE /delete-task/:id", () => {
     test("deletes a task by its ID", async () => {
       // Create a sample task in the database
       const newTask = await Task.create({
@@ -139,7 +144,7 @@ describe("Task Management API", () => {
       });
 
       // Make DELETE request to delete the task by its ID
-      await request(app).delete(`/tasks/${newTask._id}`).expect(204);
+      await request(app).delete(`/delete-task/${newTask._id}`).expect(204);
 
       // Verify the task is deleted from the database
       const deletedTask = await Task.findById(newTask._id);
@@ -148,7 +153,7 @@ describe("Task Management API", () => {
 
     test("returns 404 if task with given ID does not exist", async () => {
       // Make DELETE request with an invalid task ID
-      await request(app).delete("/task/invalid-id").expect(404);
+      await request(app).delete("/delete-task/invalid-id").expect(404);
     });
   });
 });

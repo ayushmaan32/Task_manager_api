@@ -13,7 +13,7 @@ This Task Management API provides endpoints to manage tasks, including creating,
 
 ## API Endpoints
 
-### 1. POST /task
+### 1. POST /create-task
 
 - Creates a new task.
 
@@ -27,18 +27,18 @@ This Task Management API provides endpoints to manage tasks, including creating,
 }
 ```
 
-### 2. GET /task
+### 2. GET /retrieveall-task
 
 - Retrieve all task
 
-### 3. GET /task/:id
+### 3. GET /getSingle-task/:id
 
 - Retrieve single task
 
-### 4. DELETE /task/:id
+### 4. DELETE /delete-task/:id
 
 - Delete single task
 
-### 5. PUT /task/:id
+### 5. PUT /update-task/:id
 
 - Update single task

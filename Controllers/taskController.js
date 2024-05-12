@@ -2,12 +2,13 @@
 const mongoose = require("mongoose");
 const Task = require("../models/Task");
 
+// create a new task
 module.exports.create = async function (req, res) {
   try {
     const { title, description, status } = req.body;
 
     // Validate inputs
-    if (!title || !description) {
+    if (!title || !description || !status) {
       return res
         .status(400)
         .json({ message: "Title and description are required" });
@@ -21,9 +22,13 @@ module.exports.create = async function (req, res) {
   }
 };
 
+// Get all task
 module.exports.retrieve = async function (req, res) {
   try {
     const tasks = await Task.find();
+    if (!task) {
+      res.status(404).json({ message: "Tasks not found" });
+    }
     res.json(tasks);
   } catch (error) {
     console.error(error);
@@ -31,13 +36,14 @@ module.exports.retrieve = async function (req, res) {
   }
 };
 
+// Get a single task
 module.exports.retrieveSingleTask = async function (req, res) {
   try {
     const taskId = req.params.id;
     const task = await Task.findById(taskId);
 
     if (!task) {
-      return res.status(404).json({ message: "Task not found" });
+      return res.status(400).json({ message: "Task not found" });
     }
 
     res.json(task);
@@ -47,12 +53,13 @@ module.exports.retrieveSingleTask = async function (req, res) {
   }
 };
 
+// update a task by its Id
 module.exports.update = async function (req, res) {
   try {
     const taskId = req.params.id;
     const { title, description, status } = req.body;
 
-    if (!title || !description) {
+    if (!title || !description || !status) {
       return res
         .status(400)
         .json({ message: "Title and description are required" });
